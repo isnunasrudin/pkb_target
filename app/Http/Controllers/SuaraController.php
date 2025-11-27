@@ -124,12 +124,12 @@ class SuaraController extends Controller
             return [$address->id => $data];
         });
 
-        return view('data.list_desa', compact('daftar_desa', 'calon_dewans', 'data', 'dpt', 'target'));
+        return view('data.list_desa', compact('daftar_desa', 'calon_dewans', 'data', 'dpt', 'target', 'kecamatan'));
     }
 
     public function rt(Address $address) {
 
-        $daftar_rt = $address->rt;
+        $daftar_rt = $address->rt->sortBy('rt');
         $dapil = $address->dapil;
 
         // dd($daftar_rt->pluck('rt')->sortB);
@@ -165,7 +165,7 @@ class SuaraController extends Controller
             return [$rt->id => $data];
         });
 
-        return view('data.list_rt', compact('daftar_rt', 'calon_dewans', 'data', 'dpt', 'target'));
+        return view('data.list_rt', compact('daftar_rt', 'calon_dewans', 'data', 'dpt', 'target', 'address'));
     }
 
     public function hitung_sebaran(Request $request)

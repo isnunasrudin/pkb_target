@@ -22,63 +22,92 @@
 
     <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Daftar Kecamatan Kabupaten Trenggalek</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Data Desa {{ $address->desa }} | Kecamatan {{ $address->kecamatan }}</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive" style="">
-            <table class="table table-bordered" cellspacing="0" class="w-100">
+            <table class="table table-bordered table-striped " id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th rowspan="2" width="5%">No.</th>
                         <th rowspan="2" width="100%">Nama Dewan</th>
-                        <th colspan="{{ $daftar_rt->count() }}">RT/RW</th>
+                        <th colspan="{{ $daftar_rt->count() }}">
+                            RT/RW
+                        </th>
+                        <th rowspan="2">Total</th>
                     </tr>
                     <tr>
                         @foreach($daftar_rt as $rt)
                             <th>
-                                {{ $rt->rt }}/{{ $rt->rw }}
+                                <span style="white-space: nowrap">RT {{ $rt->rt }} <sup>RW {{ $rt->rw }}</sup></span>
+                                <span class="badge badge-secondary">{{ number_format($dpt[$rt->id], 0, ',', '.') }} DPT</span>
                             </th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($calon_dewans as $dewan)
+                        @php
+                        $total_baris_ini = [
+                            'suara' => 0,
+                            'target' => 0,
+                            'kurang' => 0,
+                        ];
+                        @endphp
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $dewan->name }}</td>
+                            <td><span style="width: 200px" class="d-inline-block">{{ $dewan->name }}</span></td>
                             @foreach($daftar_rt as $rt)
+                                @php $poin = $data[$rt->id][$dewan->id] ?? null;
+                                    $total_baris_ini['suara'] += $poin;
+                                    $total_baris_ini['target'] += $target[$rt->id][$dewan->id];
+                                    $total_baris_ini['kurang'] += $target[$rt->id][$dewan->id] - $poin;
+                                @endphp
                                 <td>
-                                    {{-- <div class="progress mb-2" style="width: 100%">
+                                    <div class="d-flex">
+
+                                    <div class="progress vertical my-auto mr-2" style="height: 40px">
                                         <div class="progress-bar bg-primary" 
-                                            style="width: 20%" 
-                                            aria-valuenow="20" 
-                                            aria-valuemin="0" 
-                                            aria-valuemax="100">
+                                            style="height: {{ $poin / $dpt[$rt->id] * 100 }}%">
                                         </div>
                                         <div class="progress-bar bg-success" 
-                                            style="width: 40%" 
-                                            aria-valuenow="40" 
-                                            aria-valuemin="0" 
-                                            aria-valuemax="100">
-                                        </div> --}}
-                                    {{-- </div> --}}
-                                    <div class="d-block text-nowrap">
-                                        <span class="badge badge-primary">{{ $data[$rt->id][$dewan->id] }} Suara</span>
+                                            style="height: {{ ($target[$rt->id][$dewan->id] - $poin) / $dpt[$rt->id] * 100 }}%">
+                                        </div>
                                     </div>
-                                    <div class="d-block text-nowrap">
-                                        <span class="badge badge-success">{{ $target[$rt->id][$dewan->id] }} Target</span>
+
+                                    <div style="width: 50px" class="d-inline-flex flex-column">
+
+                                        <div class="d-block text-nowrap">
+                                            <span class="badge badge-success">{{ number_format($target[$rt->id][$dewan->id], 0, ',', '.') }} Target</span>
+                                        </div>
+                                        <div class="d-block text-nowrap">
+                                            <span class="badge badge-primary">{{ number_format($data[$rt->id][$dewan->id], 0, ',', '.') }} Suara</span>
+                                        </div>
+
+                                        @if($target[$rt->id][$dewan->id] > $poin)
+                                        <div class="d-block text-nowrap">
+                                            <span class="badge badge-danger">{{ number_format($target[$rt->id][$dewan->id] - $poin, 0, ',', '.') }} Kurang</span>
+                                        </div>
+                                        @endif
+
                                     </div>
-                                    <div class="d-block text-nowrap">
-                                        <span class="badge badge-secondary">{{ $dpt[$rt->id] }} DPT</span>
                                     </div>
-                                {{-- <td class="{{ $poin !== null ? 'text-success' : 'text-danger' }}"> --}}
-                                    {{-- @if($poin !== null)
-                                    <a href="{{ route('desa', $desa->kecamatan) }}">{{ $poin }}</a>
-                                    @else
-                                    -
-                                    @endif --}}
                                 </td>
                             @endforeach
+                            <td>
+                                <div class="d-block text-nowrap">
+                                    <span class="badge badge-success">{{ number_format($total_baris_ini['target'], 0, ',', '.') }} Target</span>
+                                </div>
+                                <div class="d-block text-nowrap">
+                                    <span class="badge badge-primary">{{ number_format($total_baris_ini['suara'], 0, ',', '.') }} Suara</span>
+                                </div>
+
+                                @if($total_baris_ini['target'] > $total_baris_ini['suara'])
+                                <div class="d-block text-nowrap">
+                                    <span class="badge badge-danger">{{ number_format($total_baris_ini['target'] - $total_baris_ini['suara'], 0, ',', '.') }} Kurang</span>
+                                </div>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -90,10 +119,20 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
-<script src="https://cdn.datatables.net/fixedcolumns/5.0.5/js/dataTables.fixedColumns.js" ></script>
-<script src="https://cdn.datatables.net/fixedcolumns/5.0.5/js/fixedColumns.bootstrap4.js" ></script>
-<script>
-    console.log($('table'))
-</script>
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                fixedColumns: {
+                    start: 2,
+                    end: 1,
+                },
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 600,
+                ordering: false,
+                searching: false,
+            });
+        });
+    </script>
 @endpush

@@ -344,7 +344,32 @@
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" /> -->
 <script src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.5/js/dataTables.bootstrap4.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/5.0.5/js/dataTables.fixedColumns.min.js"></script>
 
+    <style>
+        .progress.vertical {
+            background: #efefef;
+            border: 1px solid #cecece;
+            width: 20px;
+            margin-right: 20px;
+            float: left;
+            display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+            display: -ms-flexbox;  /* TWEENER - IE 10 */
+            display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+            display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+            align-items: flex-end;
+            -webkit-align-items: flex-end; /* Safari 7.0+ */
+            flex-direction: column-reverse;
+        }
+
+        .progress.vertical .progress-bar {
+            width: 100%;
+            height: 0;
+            -webkit-transition: height 0.6s ease;
+            -o-transition: height 0.6s ease;
+            transition: height 0.6s ease;
+        }
+    </style>
 @stack('scripts')
 
 </body>
