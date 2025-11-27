@@ -1,0 +1,69 @@
+@extends('layouts.admin')
+
+@section('main-content')
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">{{ __('Daftar Pemilih Tetap') }}</h1>
+
+    @if (session('success'))
+    <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
+
+    @if (session('status'))
+        <div class="alert alert-success border-left-success" role="alert">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Kecamatan Kabupaten Trenggalek</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th rowspan="2" width="5%">No.</th>
+                        <th rowspan="2">Nama Dewan</th>
+                        <th colspan="{{ $daftar_tps->count() }}">TPS</th>
+                    </tr>
+                    <tr>
+                        @foreach($daftar_tps as $tps)
+                            <th>
+                                {{ $tps->no_tps }}
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($calon_dewans as $dewan)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $dewan->name }}</td>
+                            @foreach($daftar_tps as $desa)
+                                @php $poin = $data[$desa->id][$dewan->id] ?? null @endphp
+                                <td>
+                                {{-- <td class="{{ $poin !== null ? 'text-success' : 'text-danger' }}"> --}}
+                                    {{ $poin ?? '-' }}
+                                    {{-- @if($poin !== null)
+                                    <a href="{{ route('desa', $desa->kecamatan) }}">{{ $poin }}</a>
+                                    @else
+                                    -
+                                    @endif --}}
+                                </td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@endsection
