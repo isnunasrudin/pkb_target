@@ -148,7 +148,7 @@
                 paging: false,
                 scrollCollapse: true,
                 scrollX: true,
-                scrollY: 600,
+                scrollY: 400,
                 ordering: false,
                 searching: false,
             });
