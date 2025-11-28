@@ -51,6 +51,12 @@
                 <span>{{ __('Dapil') }}</span></a>
         </li>
 
+        <li class="nav-item {{ Nav::isRoute('export') }}">
+            <a class="nav-link" href="{{ route('export') }}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>{{ __('Export') }}</span></a>
+        </li>
+
         <!-- Nav Item - Dashboard -->
         {{-- <li class="nav-item {{ Nav::isRoute('home') }}">
             <a class="nav-link" href="{{ route('home') }}">

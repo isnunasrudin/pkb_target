@@ -43,3 +43,4 @@ Route::get('rt/{address}', 'SuaraController@rt')->name('rt');
 // Route::get('/test2', 'TestController@test2')->name('test');
 Route::post('/sebar', 'SuaraController@hitung_sebaran')->name('sebar');
 Route::delete('/sebar', 'SuaraController@reset_sebaran')->name('reset_sebaran');
+Route::get('/export', 'ExportController@export')->name('export');
