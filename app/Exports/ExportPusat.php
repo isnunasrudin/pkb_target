@@ -4,13 +4,13 @@ namespace App\Exports;
 
 use App\Models\CalonDewan;
 use App\Models\Rt;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Concerns\WithStyles; // Import interface WithStyles
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet; // Import Worksheet untuk tipe hinting
 
-class ExportPusat implements FromCollection, WithHeadings, WithStyles, WithStrictNullComparison
+class ExportPusat implements FromArray, WithHeadings, WithStyles, WithStrictNullComparison
 {
     public function headings(): array
     {
@@ -21,24 +21,21 @@ class ExportPusat implements FromCollection, WithHeadings, WithStyles, WithStric
             'KECAMATAN',
             'DESA',
             'DAPIL',
-            'NAMA',
+            'NAMA PENGAMPU',
             'RT',
             'RW',
             'TARGET 2029',
         ];
     }
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
+    
+    public function array() : array
     {
-        $data_final = collect();
+        $data_final = [];
         $increment = 1;
 
-        CalonDewan::with(['suara' => fn($q) => $q->whereSuaraType(Rt::class)], 'suara.suara.address')->whereNot('name', 'Partai')->each(function ($calon) use ($data_final, &$increment) {
+        CalonDewan::with(['suara' => fn($q) => $q->whereSuaraType(Rt::class)->with('suara.address')])->whereNot('name', 'Partai')->each(function ($calon) use (&$data_final, &$increment) {
             $calon->suara->each(function ($suara) use (&$data_final, &$increment, $calon) {
-                $data_final->push([
+                $data_final[] = [
                     'no' => $increment++, // Increment dinaikkan di sini
                     'provinsi' => 'JAWA TIMUR',
                     'kabupaten' => 'TRENGGALEK',
@@ -49,11 +46,13 @@ class ExportPusat implements FromCollection, WithHeadings, WithStyles, WithStric
                     'rt' => $suara->suara->rt,
                     'rw' => $suara->suara->rw,
                     'target' => $suara->target,
-                ]);
+                ];
+
+
             });
         });
 
-        return $data_final;
+        return ($data_final);
     }
     
     /**
