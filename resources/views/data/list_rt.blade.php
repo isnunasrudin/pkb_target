@@ -2,9 +2,6 @@
 
 @section('main-content')
 
-    <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">{{ __('Daftar Pemilih Tetap') }}</h1>
-
     @if (session('success'))
     <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
@@ -39,8 +36,8 @@
                     <tr>
                         @foreach($daftar_rt as $rt)
                             <th>
-                                <span style="white-space: nowrap">RT {{ $rt->rt }} <sup>RW {{ $rt->rw }}</sup></span>
-                                <span class="badge badge-secondary">{{ number_format($dpt[$rt->id], 0, ',', '.') }} DPT</span>
+                                <span style="white-space: nowrap" class="{{ in_array($rt->rt, $daftar_rt_yang_duplikat) ? 'text-danger' : '' }}">RT {{ $rt->rt }} <sup>RW {{ $rt->rw }}</sup></span>
+                                <span class="badge {{ in_array($rt->id, $rt_dpt_invalid) ? 'badge-danger' : 'badge-secondary' }}">{{ number_format($dpt[$rt->id], 0, ',', '.') }} DPT</span>
                             </th>
                         @endforeach
                     </tr>
@@ -95,16 +92,16 @@
                                 </td>
                             @endforeach
                             <td>
-                                <div class="d-block text-nowrap">
-                                    <span class="badge badge-success">{{ number_format($total_baris_ini['target'], 0, ',', '.') }} Target</span>
+                                <div class="d-block text-nowrap mb-1">
+                                    <span class="badge badge-success" style="font-size: 100%">{{ number_format($total_baris_ini['target'], 0, ',', '.') }} Target</span>
                                 </div>
-                                <div class="d-block text-nowrap">
-                                    <span class="badge badge-primary">{{ number_format($total_baris_ini['suara'], 0, ',', '.') }} Suara</span>
+                                <div class="d-block text-nowrap mb-1">
+                                    <span class="badge badge-primary" style="font-size: 100%">{{ number_format($total_baris_ini['suara'], 0, ',', '.') }} Suara</span>
                                 </div>
 
                                 @if($total_baris_ini['target'] > $total_baris_ini['suara'])
                                 <div class="d-block text-nowrap">
-                                    <span class="badge badge-danger">{{ number_format($total_baris_ini['target'] - $total_baris_ini['suara'], 0, ',', '.') }} Kurang</span>
+                                    <span class="badge badge-danger" style="font-size: 100%">{{ number_format($total_baris_ini['target'] - $total_baris_ini['suara'], 0, ',', '.') }} Kurang</span>
                                 </div>
                                 @endif
                             </td>

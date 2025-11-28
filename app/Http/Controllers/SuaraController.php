@@ -84,7 +84,7 @@ class SuaraController extends Controller
             return [$kecamatan => $data];
         });
 
-        return view('data.list_dapil', compact('kecamatans', 'calon_dewans', 'data', 'target', 'dpt'));
+        return view('data.list_dapil', compact('kecamatans', 'calon_dewans', 'data', 'target', 'dpt', 'dapil'));
     }
 
     public function desa($kecamatan) {
@@ -130,9 +130,17 @@ class SuaraController extends Controller
     public function rt(Address $address) {
 
         $daftar_rt = $address->rt->sortBy('rt');
+        $daftar_rt->loadCount('voters');
         $dapil = $address->dapil;
 
-        // dd($daftar_rt->pluck('rt')->sortB);
+        $daftar_rt_yang_duplikat = $daftar_rt->groupBy('rt')->filter(function($rt) {
+            return $rt->count() > 1;
+        })->keys()->toArray();
+
+        // Daftar RT yang voters_count < 3
+        $rt_dpt_invalid = $daftar_rt->filter(function(Rt $rt) {
+            return $rt->voters_count <= 5;
+        })->pluck('id')->toArray();
 
         $calon_dewans = CalonDewan::whereDapil($dapil)->get();
 
@@ -165,7 +173,7 @@ class SuaraController extends Controller
             return [$rt->id => $data];
         });
 
-        return view('data.list_rt', compact('daftar_rt', 'calon_dewans', 'data', 'dpt', 'target', 'address'));
+        return view('data.list_rt', compact('daftar_rt', 'calon_dewans', 'data', 'dpt', 'target', 'address', 'daftar_rt_yang_duplikat', 'rt_dpt_invalid'));
     }
 
     public function hitung_sebaran(Request $request)
@@ -176,87 +184,106 @@ class SuaraController extends Controller
             'target' => 'required',
         ]);
         
-        // Ambil calon
-        $calon_dewan = CalonDewan::findOrFail($request->calon);
+        // Ambil calon yang sedang dihitung
+        $calon = CalonDewan::findOrFail($request->calon);
+
+        // Ambil semua calon lain dalam dapil yang sama
+        $calon_lain = CalonDewan::whereDapil($calon->dapil)
+            ->where('id', '!=', $calon->id)
+            ->get();
 
         // Ambil semua RT dalam kecamatan
         $rts = Rt::whereHas('address', fn($q) => $q->where('kecamatan', $request->kecamatan))
             ->withCount('voters')
             ->get();
 
-        // Ambil suara existing tiap RT
-        $data = $rts->map(function(Rt $rt) use ($calon_dewan) {
-            $existing = $calon_dewan->suara()
+        // Data final per RT
+        $data = $rts->map(function(Rt $rt) use ($calon, $calon_lain) {
+
+            // Existing suara calon saat ini
+            $existing_calon_ini = $calon->suara()
                 ->whereSuaraType(Rt::class)
                 ->whereSuaraId($rt->id)
                 ->first();
 
+            $existing_suara_calon_ini = $existing_calon_ini->total ?? 0;
+            $existing_target_calon_ini = $existing_calon_ini->target ?? 0;
+
+            // Hitung target calon-calon lain di RT ini
+            $target_calon_lain = 0;
+
+            foreach ($calon_lain as $c) {
+                $row = $c->suara()
+                    ->whereSuaraType(Rt::class)
+                    ->whereSuaraId($rt->id)
+                    ->first();
+
+                $target_calon_lain += max($row->target ?? 0, $row->total ?? 0);
+            }
+
+            // Kapasitas sisa sebenarnya
+            // dd($rt->voters );
+            $kapasitas_sisa = $rt->voters_count
+                - ($target_calon_lain + $existing_suara_calon_ini);
+
             return (object)[
                 'rt_id' => $rt->id,
                 'voters' => $rt->voters_count,
-                'existing_suara' => $existing->total ?? 0,
+                'existing_suara' => $existing_suara_calon_ini,
+                'existing_target_calon_ini' => $existing_target_calon_ini,
+                'target_calon_lain' => $target_calon_lain,
+                'kapasitas_sisa' => max($kapasitas_sisa, 0),
             ];
         });
 
         // Hitung total existing suara
         $totalExisting = $data->sum('existing_suara');
 
-        // Target minimum harus >= total existing
-        if ($request->target < $totalExisting) {
-            $request->target = $totalExisting;
-        }
+        // Target minimal harus >= existing suara
+        $target = max($request->target, $totalExisting);
 
-        // Hitung sisa target yang harus dibagi
-        $needToDistribute = $request->target - $totalExisting;
+        // Hitung kebutuhan tambahan
+        $needToDistribute = $target - $totalExisting;
 
-        // Hitung kapasitas sisa (voters - existing)
-        $totalCapacity = 0;
+        // Total kapasitas semua RT
+        $totalCapacity = $data->sum('kapasitas_sisa');
 
-        foreach ($data as $rt) {
-            $rt->kapasitas_sisa = max($rt->voters - $rt->existing_suara, 0);
-            $totalCapacity += $rt->kapasitas_sisa;
-        }
-
-        // Jika kapasitas kurang, sesuaikan (tidak boleh melebihi total kapasitas)
+        // Jika kapasitas kurang, sesuaikan
         if ($totalCapacity < $needToDistribute) {
             $needToDistribute = $totalCapacity;
         }
 
-        // Distribusi awal berdasarkan kapasitas tersisa
+        // Distribusi awal proporsional
         foreach ($data as $rt) {
             if ($totalCapacity == 0) {
                 $rt->tambah = 0;
             } else {
-                $rt->tambah = round($needToDistribute * ($rt->kapasitas_sisa / $totalCapacity));
+                $rt->tambah = floor(
+                    $needToDistribute * ($rt->kapasitas_sisa / $totalCapacity)
+                );
             }
         }
 
-        // Koreksi pembulatan
+        // Koreksi sisa pembulatan
         $assigned = $data->sum('tambah');
         $remaining = $needToDistribute - $assigned;
 
-        // Redistribusi sisa
         while ($remaining > 0) {
-            $distributed = 0;
-
             foreach ($data as $rt) {
                 if ($remaining <= 0) break;
 
                 if ($rt->tambah < $rt->kapasitas_sisa) {
                     $rt->tambah++;
                     $remaining--;
-                    $distributed++;
                 }
             }
-
-            if ($distributed == 0) break;
         }
 
-        // Hitung target_final (existing + tambahan)
+        // Hitung target_final
         foreach ($data as $rt) {
             $rt->target_final = $rt->existing_suara + $rt->tambah;
 
-            // Pastikan tidak melebihi voters
+            // Tidak boleh melebihi voters
             if ($rt->target_final > $rt->voters) {
                 $rt->target_final = $rt->voters;
             }
@@ -264,7 +291,7 @@ class SuaraController extends Controller
 
         // Simpan ke database
         foreach ($data as $rt) {
-            $calon_dewan->suara()->updateOrCreate(
+            $calon->suara()->updateOrCreate(
                 [
                     'suara_type' => Rt::class,
                     'suara_id' => $rt->rt_id,
@@ -275,7 +302,7 @@ class SuaraController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'Target berhasil disimpan');
+        return back()->with('success', 'Target berhasil disebarkan dan disimpan');
     }
 
     public function reset_sebaran(Request $request) {
