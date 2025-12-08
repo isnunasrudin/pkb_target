@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CalonDewanController;
 use App\Http\Controllers\VoterController;
+use App\Models\CalonDewan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -44,3 +46,17 @@ Route::get('rt/{address}', 'SuaraController@rt')->name('rt');
 Route::post('/sebar', 'SuaraController@hitung_sebaran')->name('sebar');
 Route::delete('/sebar', 'SuaraController@reset_sebaran')->name('reset_sebaran');
 Route::get('/export', 'ExportController@export')->name('export');
+
+Route::resource('calon_dewan', CalonDewanController::class)->withTrashed(['destroy']);
+
+Route::get('test', function(){
+    CalonDewan::orderBy('id')->get()->groupBy('dapil')->each(function ($calonDewans) {
+        $order = 0;
+        $calonDewans->each(function ($calonDewan) use (&$order) {
+            $calonDewan->update([
+                'order' => $order,
+            ]);
+            $order++;
+        });
+    });
+});

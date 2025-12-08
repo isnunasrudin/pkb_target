@@ -4,10 +4,11 @@ namespace App\Models;
 
 use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Suara extends Model
 {
-    use EagerLoadPivotTrait;
+    use EagerLoadPivotTrait, SoftDeletes;
     
     protected $fillable = [
         'suara_id',

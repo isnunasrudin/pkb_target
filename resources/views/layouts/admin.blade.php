@@ -51,6 +51,20 @@
                 <span>{{ __('Dapil') }}</span></a>
         </li>
 
+        <li class="nav-item {{ Nav::isRoute('calon_dewan.index') }}">
+            <a class="nav-link" href="{{ route('calon_dewan.index') }}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>{{ __('Calon Dewan') }}</span></a>
+        </li>
+
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <div class="sidebar-heading">
+            {{ __('Hasil') }}
+        </div>
+
         <li class="nav-item {{ Nav::isRoute('export') }}">
             <a class="nav-link" href="{{ route('export') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
@@ -351,6 +365,7 @@
 <script src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.5/js/dataTables.bootstrap4.js"></script>
 <script src="https://cdn.datatables.net/fixedcolumns/5.0.5/js/dataTables.fixedColumns.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <style>
         .progress.vertical {
