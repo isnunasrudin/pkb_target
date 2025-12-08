@@ -66,6 +66,7 @@
                     <th>Nama</th>
                     <th>Dapil</th>
                     <th>Total Suara</th>
+                    <th>Target</th>
                     <th style="width: 10%">Aksi</th>
                 </tr>
             </thead>
@@ -82,6 +83,7 @@
                     </td>
                     <td>{{ $item->dapil }}</td>
                     <td>{{ $item->suara_sum_total ?? 0 }}</td>
+                    <td>{{ $item->suara_sum_target ?? 0 }}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit{{ $item->id }}"><i class="fas fa-edit"></i></button>
                         @if($item->deleted_at)

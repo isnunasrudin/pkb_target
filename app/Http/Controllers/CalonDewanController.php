@@ -18,7 +18,9 @@ class CalonDewanController extends Controller
     {
         $calonDewan = CalonDewan::withTrashed()->withSum([
             'suara' => fn($query) => $query->whereSuaraType(Rt::class),
-        ], 'total')->orderBy('dapil')->orderBy('order')->orderBy('id')->get();
+        ], 'total')->withSum([
+            'suara' => fn($query) => $query->whereSuaraType(Rt::class),
+        ], 'target')->orderBy('dapil')->orderBy('order')->orderBy('id')->get();
 
         return view('calon_dewan', compact('calonDewan'));
     }
