@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -27,88 +28,95 @@
     <link href="https://cdn.datatables.net/2.3.5/css/dataTables.bootstrap4.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/fixedcolumns/5.0.5/css/fixedColumns.bootstrap4.css" rel="stylesheet">
 </head>
+
 <body id="page-top">
 
-<!-- Page Wrapper -->
-<div id="wrapper">
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">PKB <sup>TGX</sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item {{ Nav::isRoute('dapil') }}">
+                <a class="nav-link" href="{{ route('dapil') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>{{ __('Dapil') }}</span></a>
+            </li>
+
+            <li class="nav-item {{ Nav::isRoute('calon_dewan.index') }}">
+                <a class="nav-link" href="{{ route('calon_dewan.index') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>{{ __('Calon Dewan') }}</span></a>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <div class="sidebar-heading">
+                {{ __('Hasil') }}
             </div>
-            <div class="sidebar-brand-text mx-3">PKB <sup>TGX</sup></div>
-        </a>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
+            <li class="nav-item {{ Nav::isRoute('export') }}">
+                <a class="nav-link" href="{{ route('export') }}" id="export">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>{{ __('Export') }}</span></a>
+            </li>
 
-        <li class="nav-item {{ Nav::isRoute('dapil') }}">
-            <a class="nav-link" href="{{ route('dapil') }}">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{ __('Dapil') }}</span></a>
-        </li>
+            <li class="nav-item {{ Nav::isRoute('recap') }}">
+                <a class="nav-link" href="{{ route('recap') }}" id="recap">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>{{ __('Recap') }}</span></a>
+            </li>
 
-        <li class="nav-item {{ Nav::isRoute('calon_dewan.index') }}">
-            <a class="nav-link" href="{{ route('calon_dewan.index') }}">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{ __('Calon Dewan') }}</span></a>
-        </li>
-
-
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-
-        <div class="sidebar-heading">
-            {{ __('Hasil') }}
-        </div>
-
-        <li class="nav-item {{ Nav::isRoute('export') }}">
-            <a class="nav-link" href="{{ route('export') }}" id="export">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{ __('Export') }}</span></a>
-        </li>
-
-        <!-- Nav Item - Dashboard -->
-        {{-- <li class="nav-item {{ Nav::isRoute('home') }}">
+            <!-- Nav Item - Dashboard -->
+            {{-- <li class="nav-item {{ Nav::isRoute('home') }}">
             <a class="nav-link" href="{{ route('home') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>{{ __('Dashboard') }}</span></a>
-        </li> --}}
+            </li> --}}
 
-        {{-- <!-- Divider -->
+            {{-- <!-- Divider -->
         <hr class="sidebar-divider">
 
         <!-- Heading -->
         <div class="sidebar-heading">
             {{ __('Settings') }}
-        </div>
+    </div>
 
-        <!-- Nav Item - Profile -->
-        <li class="nav-item {{ Nav::isRoute('profile') }}">
-            <a class="nav-link" href="{{ route('profile') }}">
-                <i class="fas fa-fw fa-user"></i>
-                <span>{{ __('Profile') }}</span>
-            </a>
-        </li>
+    <!-- Nav Item - Profile -->
+    <li class="nav-item {{ Nav::isRoute('profile') }}">
+        <a class="nav-link" href="{{ route('profile') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Profile') }}</span>
+        </a>
+    </li>
 
-        <!-- Nav Item - About -->
-        <li class="nav-item {{ Nav::isRoute('about') }}">
-            <a class="nav-link" href="{{ route('about') }}">
-                <i class="fas fa-fw fa-hands-helping"></i>
-                <span>{{ __('About') }}</span>
-            </a>
-        </li> --}}
+    <!-- Nav Item - About -->
+    <li class="nav-item {{ Nav::isRoute('about') }}">
+        <a class="nav-link" href="{{ route('about') }}">
+            <i class="fas fa-fw fa-hands-helping"></i>
+            <span>{{ __('About') }}</span>
+        </a>
+    </li> --}}
 
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
 
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
 
     </ul>
     <!-- End of Sidebar -->
@@ -326,46 +334,46 @@
     </div>
     <!-- End of Content Wrapper -->
 
-</div>
+    </div>
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('Ready to Leave?') }}</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-link" type="button" data-dismiss="modal">{{ __('Cancel') }}</button>
-                <a class="btn btn-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ __('Ready to Leave?') }}</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-link" type="button" data-dismiss="modal">{{ __('Cancel') }}</button>
+                    <a class="btn btn-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Scripts -->
-<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-<script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+    <!-- Scripts -->
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" /> -->
-<script src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/2.3.5/js/dataTables.bootstrap4.js"></script>
-<script src="https://cdn.datatables.net/fixedcolumns/5.0.5/js/dataTables.fixedColumns.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" /> -->
+    <script src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.5/js/dataTables.bootstrap4.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.5/js/dataTables.fixedColumns.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <style>
         .progress.vertical {
@@ -374,12 +382,17 @@
             width: 20px;
             margin-right: 20px;
             float: left;
-            display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
-            display: -ms-flexbox;  /* TWEENER - IE 10 */
-            display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
-            display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+            display: -webkit-box;
+            /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+            display: -ms-flexbox;
+            /* TWEENER - IE 10 */
+            display: -webkit-flex;
+            /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+            display: flex;
+            /* NEW, Spec - Firefox, Chrome, Opera */
             align-items: flex-end;
-            -webkit-align-items: flex-end; /* Safari 7.0+ */
+            -webkit-align-items: flex-end;
+            /* Safari 7.0+ */
             flex-direction: column-reverse;
         }
 
@@ -391,8 +404,8 @@
             transition: height 0.6s ease;
         }
     </style>
-@stack('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('readystatechange', (event) => {
             console.log(event)
@@ -410,7 +423,7 @@
                     didOpen: () => {
                         Swal.showLoading()
                         $.ajax({
-                            url: '{{ route('export') }}',
+                            url: "{{ route('export') }}",
                             type: 'GET',
                             success: function(response) {
                                 Swal.close()
@@ -434,4 +447,5 @@
     </script>
 
 </body>
+
 </html>

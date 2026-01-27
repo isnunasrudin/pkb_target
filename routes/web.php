@@ -49,7 +49,7 @@ Route::get('/export', 'ExportController@export')->name('export');
 
 Route::resource('calon_dewan', CalonDewanController::class)->withTrashed(['destroy']);
 
-Route::get('test', function(){
+Route::get('test', function () {
     CalonDewan::orderBy('id')->get()->groupBy('dapil')->each(function ($calonDewans) {
         $order = 0;
         $calonDewans->each(function ($calonDewan) use (&$order) {
@@ -60,3 +60,6 @@ Route::get('test', function(){
         });
     });
 });
+
+Route::get('recap', 'RecapController@index')->name('recap');
+Route::get('recap/dpt', 'RecapController@dpt')->name('recap.dpt');
