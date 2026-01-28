@@ -23,4 +23,9 @@ class RecapController extends Controller
     {
         return Excel::download(new RecapPartaiExport(), 'recap-partai.xlsx');
     }
+
+    public function kecamatan(Request $request)
+    {
+        return (new SuaraController)->desaRecap($request->kecamatan);
+    }
 }
