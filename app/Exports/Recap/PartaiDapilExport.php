@@ -31,7 +31,7 @@ class PartaiDapilExport implements FromView, WithHeadings, ShouldAutoSize, WithT
                         $query->whereIn('kecamatan', $dapil);
                     });
                 })->whereRelation('calonDewan', 'name', 'Partai')->sum('total'),
-                'Persentase' => floor($suara / $dpt * 100) . "%",
+                'Persentase' => round($suara / $dpt * 100, 2) . "%",
             ];
         });
 
@@ -41,7 +41,7 @@ class PartaiDapilExport implements FromView, WithHeadings, ShouldAutoSize, WithT
             'Keterangan' => '',
             'DPT' => $data->sum('DPT'),
             'Suara' => $data->sum('Suara'),
-            'Persentase' => floor($data->sum('Suara') / $data->sum('DPT') * 100) . "%",
+            'Persentase' => round($data->sum('Suara') / $data->sum('DPT') * 100, 2) . "%",
 
         ]);
 

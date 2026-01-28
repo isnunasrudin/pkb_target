@@ -26,7 +26,7 @@ class PartaiKecamatanExport implements FromView, WithHeadings, ShouldAutoSize, W
                 'Suara' => $suara = Suara::whereHasMorph('suara', [Rt::class], function ($query) use ($kecamatan) {
                     $query->whereRelation('address', 'kecamatan', $kecamatan);
                 })->whereRelation('calonDewan', 'name', 'Partai')->sum('total'),
-                'Persentase' => floor($suara / $dpt * 100) . "%",
+                'Persentase' => round($suara / $dpt * 100, 2) . "%",
             ];
         });
 
@@ -35,7 +35,7 @@ class PartaiKecamatanExport implements FromView, WithHeadings, ShouldAutoSize, W
             'Kecamatan' => 'TOTAL',
             'DPT' => $data->sum('DPT'),
             'Suara' => $data->sum('Suara'),
-            'Persentase' => floor($data->sum('Suara') / $data->sum('DPT') * 100) . "%",
+            'Persentase' => round($data->sum('Suara') / $data->sum('DPT') * 100, 2) . "%",
         ]);
 
         return view('exports.dpt', [

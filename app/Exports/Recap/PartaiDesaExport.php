@@ -27,7 +27,7 @@ class PartaiDesaExport implements FromView, WithHeadings, ShouldAutoSize, WithTi
                 'Suara' => $suara = Suara::whereHasMorph('suara', [Rt::class], function ($query) use ($desa) {
                     $query->whereRelation('address', 'address_id', $desa->id);
                 })->whereRelation('calonDewan', 'name', 'Partai')->sum('total'),
-                'Persentase' => floor($suara / $dpt * 100) . "%",
+                'Persentase' => round($suara / $dpt * 100, 2) . "%",
             ];
         });
 
@@ -36,7 +36,7 @@ class PartaiDesaExport implements FromView, WithHeadings, ShouldAutoSize, WithTi
             'Desa' => 'TOTAL',
             'DPT' => $data->sum('DPT'),
             'Suara' => $data->sum('Suara'),
-            'Persentase' => floor($data->sum('Suara') / $data->sum('DPT') * 100) . "%",
+            'Persentase' => round($data->sum('Suara') / $data->sum('DPT') * 100, 2) . "%",
         ]);
 
         return view('exports.dpt', [
