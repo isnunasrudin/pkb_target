@@ -37,7 +37,6 @@ Route::resource('voters', VoterController::class);
 Route::get('dapil', 'SuaraController@showDapil')->name('dapil');
 
 Route::get('dapil/{dapil}', 'SuaraController@dapil');
-Route::get('dapil/{dapil}/recap', 'SuaraController@dapilRecap')->name('dapil.recap');
 Route::get('kecamatan/{kecamatan}', 'SuaraController@desa')->name('desa');
 Route::get('kecamatan/{kecamatan}/recap', 'SuaraController@desaRecap')->name('desa.recap');
 Route::get('desa/{address}', 'SuaraController@tps')->name('tps');
@@ -64,6 +63,7 @@ Route::get('test', function () {
 });
 
 Route::get('recap', 'RecapController@index')->name('recap');
+Route::post('recap', 'RecapController@allKecamatan');
 Route::post('recap/kecamatan', 'RecapController@kecamatan')->name('recap.kecamatan');
 
 Route::get('recap/dpt', 'RecapController@dpt')->name('recap.dpt');

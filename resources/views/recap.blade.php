@@ -72,6 +72,23 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-danger">Suara Caleg 2024</h6>
+            </div>
+
+            <div class="card-body">
+                <form method="POST" action="{{ route('recap') }}">
+                    @csrf
+                    <button class="btn btn-danger btn-lg">Unduh Rekap Semua Dapil (.xlsx)</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-danger">Suara Caleg Per Kecamatan 2024</h6>
             </div>
 
