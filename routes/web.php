@@ -63,3 +63,4 @@ Route::get('test', function () {
 
 Route::get('recap', 'RecapController@index')->name('recap');
 Route::get('recap/dpt', 'RecapController@dpt')->name('recap.dpt');
+Route::get('recap/partai', 'RecapController@partai')->name('recap.partai');

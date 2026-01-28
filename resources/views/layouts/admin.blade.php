@@ -67,11 +67,11 @@
                 {{ __('Hasil') }}
             </div>
 
-            <li class="nav-item {{ Nav::isRoute('export') }}">
+            <!-- <li class="nav-item {{ Nav::isRoute('export') }}">
                 <a class="nav-link" href="{{ route('export') }}" id="export">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>{{ __('Export') }}</span></a>
-            </li>
+            </li> -->
 
             <li class="nav-item {{ Nav::isRoute('recap') }}">
                 <a class="nav-link" href="{{ route('recap') }}" id="recap">
@@ -404,47 +404,8 @@
             transition: height 0.6s ease;
         }
     </style>
-    @stack('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.addEventListener('readystatechange', (event) => {
-            console.log(event)
-        })
-
-        $(document).ready(function() {
-            $('#export').click(function(e) {
-                e.preventDefault()
-                Swal.fire({
-                    title: 'Export Diproses',
-                    text: "Memerlukan waktu beberapa menit",
-                    icon: 'info',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                        $.ajax({
-                            url: "{{ route('export') }}",
-                            type: 'GET',
-                            success: function(response) {
-                                Swal.close()
-                                window.location.href = response.data.url
-                            },
-                            error: function(response) {
-                                Swal.close()
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: response.responseJSON.message,
-                                    icon: 'error',
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false
-                                })
-                            }
-                        })
-                    }
-                })
-            });
-        });
-    </script>
+    @stack('scripts')
 
 </body>
 
